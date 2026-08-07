@@ -2,7 +2,12 @@ query CartTransformRunInput {
   cart {
     lines {
       id
-      quantity
+      quantity,
+      cost {
+          amountPerQuantity{
+            amount
+          }
+      }
     }
   }
 }
