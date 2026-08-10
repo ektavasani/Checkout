@@ -18,27 +18,32 @@ const NO_CHANGES = {
  */
 export function cartTransformRun(input) {
 
-  const firstItem = input.cart.lines[0];
+  const firstLine = input.cart.lines[0];
+  const secondLine = input.cart.lines[1];
 
+  if (!firstLine || !secondLine) {
+    return NO_CHANGES;
+  }
 
   return {
     operations: [
       {
-        lineUpdate: {
-          cartLineId:firstItem.id,
-          title:"Hello From my function",
+        linesMerge: {
+          cartLines:[
+            {cartLineId:firstLine.id, quantity:firstLine.quantity},
+            {cartLineId:secondLine.id, quantity:secondLine.quantity},
+          ],
+          title:"Combo Deal",
+          parentVariantId:"gid://shopify/ProductVariant/53925450547475",
           price:{
-            adjustment:{
-              fixedPricePerUnit:{
-                amount: 20,
-              }
+            percentageDecrease:{
+              value:25
             }
           },
-          image:{
-            url:"https://cdn.shopify.com/s/files/1/0979/8215/2979/files/theme_cover_image.jpg?v=1773046626"
-          }
+         
         }
       }
     ],
   };
 };
+
