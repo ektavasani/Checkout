@@ -16,34 +16,52 @@ const NO_CHANGES = {
  * @param {CartTransformRunInput} input
  * @returns {CartTransformRunResult}
  */
+
 export function cartTransformRun(input) {
 
-  const firstLine = input.cart.lines[0];
-  const secondLine = input.cart.lines[1];
+  let firstFound = null;
+  let secondFound = null;
 
-  if (!firstLine || !secondLine) {
+  const lines = input.cart.lines;
+  for (const line of lines) {
+    const tag = line.attribute?.value;
+    if(!tag)
+      continue;
+
+    if(!firstFound){
+      firstFound = line;
+    } else if(firstFound.attribute?.value === tag){
+      secondFound = line;
+      break;
+    }
+  }
+
+
+  if(!firstFound || !secondFound){
     return NO_CHANGES;
   }
 
   return {
     operations: [
       {
-        linesMerge: {
+        linesMerge:{
           cartLines:[
-            {cartLineId:firstLine.id, quantity:firstLine.quantity},
-            {cartLineId:secondLine.id, quantity:secondLine.quantity},
+            {
+              cartLineId: firstFound.id, quantity: firstFound.quantity 
+            },
+            {
+              cartLineId: secondFound.id, quantity: secondFound.quantity 
+            },
           ],
-          title:"Combo Deal",
-          parentVariantId:"gid://shopify/ProductVariant/53925450547475",
-          price:{
-            percentageDecrease:{
-              value:25
-            }
+          title:"Due package",
+          parentVariantId: "gid://shopify/ProductVariant/53925450547475",
+          price: {
+            percentageDecrease: { value: 15 },
           },
-         
         }
       }
-    ],
-  };
+    ]
+  }
+
 };
 
